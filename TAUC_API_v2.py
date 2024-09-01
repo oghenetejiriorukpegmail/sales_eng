@@ -5,7 +5,7 @@ import time
 import uuid
 import re
 import get_bearer_tokens
-import test_signature
+import generate_signature
 
 def normalize_mac(mac):
     # Check if the MAC address is already in the correct format
@@ -19,7 +19,7 @@ def generate_headers(token, request_url, payload):
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}',
-        'X-Authorization': f'Nonce={test_signature.nonce},Signature={test_signature.generate_signature(url=request_url, content=payload)},Timestamp={test_signature.timestamp}'
+        'X-Authorization': f'Nonce={generate_signature.nonce},Signature={generate_signature.generate_signature(url=request_url, content=payload)},Timestamp={generate_signature.timestamp}'
     }
     print(headers)
     return headers
@@ -53,32 +53,12 @@ def main():
     sn = input ('Insert Serial Number["Y234081000803"]:')
     mac = input ('Insert Mac Address["5C628BA23548"]:')
     client_secret = "6b42162e88a24e2bb0496ba7ccac72e3"
-    test_signature.timestamp = str(int(time.time()))
-    test_signature.nonce = str(uuid.uuid4())
-    test_signature.key = client_secret
+    generate_signature.timestamp = str(int(time.time()))
+    generate_signature.nonce = str(uuid.uuid4())
+    generate_signature.key = client_secret
     operation = input('Choose Your Operation[Add, Remove]:')
 
     conn = http.client.HTTPSConnection("use1-tauc-openapi.tplinkcloud.com", context=context)
-
-    '''
-    ## Find the Network ID to be deleted
-    request_url = f"/v1/openapi/network-system-management/name?mac={mac}&sn={sn}"
-    payload = ""
-    conn.request("GET", request_url, payload, generate_headers(token, request_url, payload))
-    res = conn.getresponse()
-    data = json.loads(res.read())
-    deviceID = data['result']['id']
-    print(deviceID)
-    conn.close()
-
-    ## Delete the Network Using Obtained Network ID
-    request_url = f"/v1/openapi/network-system-management/network/{deviceID}"
-    payload = ""
-    conn.request("DELETE", request_url, payload, generate_headers(token, request_url, payload))
-    res = conn.getresponse()
-    print(res.read())
-    conn.close()
-    '''
     
     token = get_bearer_tokens.get_bearer_tokens()
 

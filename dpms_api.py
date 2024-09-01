@@ -156,6 +156,76 @@ def remove_sites(accessToken, siteId):
     finally:
         conn.close() 
 
+def config_pon_port(port_no, port_status):
+    pass
+
+def get_olts(accessToken):
+    conn = http.client.HTTPSConnection(dpms_server, dpms_port, context=context)
+    headers = { "Access-Token": accessToken , "Content-Type": "application/json"}
+    #print(deviceKey)
+    conn.request("GET", f"/openapi/v1/{dpms_id}/olt-devices", body="", headers=headers )
+    data = json.loads(conn.getresponse().read())
+    print(data)
+    
+def configure_dba_profile(accessToken, DBABody):
+    #config DBA
+    try:
+      conn = http.client.HTTPSConnection(dpms_server, dpms_port, context=context)
+      headers = { "Access-Token": accessToken , "Content-Type": "application/json"}
+      #print(deviceKey)
+      conn.request("GET", f"/openapi/v1/{dpms_id}/devices/{deviceKey}/pon/dba/profiles", body="", headers=headers)
+      DBAData = json.loads(conn.getresponse().read())
+      #print(DBAData)
+      DBAName = dpmsData['PON']['Profile']['DBA']['Profile_Name'] 
+      #print (DBAName)
+      if DBAName in str(DBAData):
+          print(f'DBA profile {DBAName} is already present on this OLT')
+      else:
+        #conn = http.client.HTTPSConnection(dpms_server, dpms_port, context=context)
+        #headers = { "Access-Token": accessToken , "Content-Type": "application/json"}
+        conn.request("POST", f"/openapi/v1/{dpms_id}/devices/{deviceKey}/pon/dba/profiles", body=DBABody, headers=headers )
+        data = json.loads(conn.getresponse().read())
+        if data['result']['errcode'] == 0:
+            print("DBA Configured Successfully!,", "Data:", data)
+        else:
+            print("Encountered an error configuring DBA, Error:", data)
+            quit()
+     
+    except Exception as e:
+      print(f"Error making API request: {e}")
+      return None
+    finally:
+        conn.close() 
+
+def configure_line_profile(accessToken, lineBody):
+    #config Line Profile
+    try:
+      conn = http.client.HTTPSConnection(dpms_server, dpms_port, context=context)
+      headers = { "Access-Token": accessToken , "Content-Type": "application/json"}
+      #print(deviceKey)
+      conn.request("GET", f"/openapi/v1/{dpms_id}/devices/{deviceKey}/pon/line-profiles?size=1&number=0", body="", headers=headers)
+      lineData = json.loads(conn.getresponse().read())
+      #print(lineData)
+      lineName = dpmsData['PON']['Profile']['DBA']['Profile_Name'] 
+      if lineName in str(lineData):
+          print(f'Line profile {lineName} is already present on this OLT')
+      else:
+        conn.request("POST", f"/openapi/v1/{dpms_id}/devices/{deviceKey}/pon/line-profiles", body=lineBody, headers=headers )
+        resultData = json.loads(conn.getresponse().read())
+        if resultData['result']['errcode'] == 0:
+            print("DBA Configured Successfully!,", "Data:", resultData)
+        else:
+            print("Encountered an error configuring DBA, Error:", resultData)
+            quit()
+
+    except Exception as e:
+      print(f"Error making API request: {e}")
+      return None
+    finally:
+        conn.close() 
+
+
+
 # Declare Variables
 # Extract dpms information from yaml file
 dpmsData = yaml2json('dpms.yaml')
@@ -175,11 +245,12 @@ def main():
     print('CRSF-Token: ',crsfToken, 'Session ID: ', sessionId)
     code = get_code(dpms_server, dpms_port, client_id, dpms_id, crsfToken, sessionId )
     print('Authorization Code:', code)
-    token = get_access_token(dpms_server, dpms_port, code, client_id=client_id, client_secret=client_secret)
-    print('Access Token:', token)
-    siteList = get_sites(dpms_id=dpms_id, accessToken=token)
+    accessToken = get_access_token(dpms_server, dpms_port, code, client_id=client_id, client_secret=client_secret)
+    print('Access Token:', accessToken)
+    siteList = get_sites(dpms_id=dpms_id, accessToken=accessToken)
     sites = []
 
+    '''
     # Create New Sites
     for site in siteList:
         #print(site)
@@ -189,21 +260,48 @@ def main():
     for new_site in new_sites:
       payload = {"siteName": new_site}
       print(f'Adding New Site "{new_site}"')
-      add_site(dpms_id, token, payload)
-      print(get_sites(dpms_id=dpms_id, accessToken=token))
+      add_site(dpms_id, accessToken, payload)
+      print(get_sites(dpms_id=dpms_id, accessToken=accessToken))
 
     # Delete Sites
     #print (delete_sites)
     for delete_site in delete_sites:
       #print (delete_site)
-      for site in get_sites(dpms_id=dpms_id, accessToken=token):
+      for site in get_sites(dpms_id=dpms_id, accessToken=accessToken):
           if site['siteName'] == delete_site:
               siteId = site['siteId']
       #print(token, siteId)
       print(f'Removing site "{delete_site}"')
-      remove_sites(token, siteId)
-    print(get_sites(dpms_id=dpms_id, accessToken=token))
+      remove_sites(accessToken, siteId)
+    print(get_sites(dpms_id=dpms_id, accessToken=accessToken))
+    '''
 
+    #Configure DBA
+    DBABody = { "dbaId": dpmsData['PON']['Profile']['DBA']['Profile_ID'],
+            "name": dpmsData['PON']['Profile']['DBA']['Profile_Name'],
+            "type": dpmsData['PON']['Profile']['DBA']['Type'],
+            "fix": dpmsData['PON']['Profile']['DBA']['Fix_Bandwidth'],
+            "assure": 0,
+            "max": 0
+             }
+    
+    #body = { "dbaId": dpmsData['PON']['Profile']['DBA']['Profile_ID'],"name": dpmsData['PON']['Profile']['DBA']['Profile_Name'],"type": dpmsData['PON']['Profile']['DBA']['Type'],"fix": dpmsData['PON']['Profile']['DBA']['Fix_Bandwidth'],"assure": 0,"max": 0}
+    #get_olts(accessToken)
+    print(DBABody)
+    configure_dba_profile(accessToken, json.dumps(DBABody))
+
+    #Configure Line
+    lineBody = { "lineProfileId": dpmsData['PON']['Profile']['Line']['Profile_ID'],
+            "name": dpmsData['PON']['Profile']['Line']['Profile_Name'],
+            "upstreamFEC": dpmsData['PON']['Profile']['Line']['Upstream_FEC'],
+            "mappingMode": dpmsData['PON']['Profile']['Line']['Mapping_Mode'],
+            "omccEncrypt": dpmsData['PON']['Profile']['Line']['Encrypt'],
+             }
+    
+    print(lineBody)
+    configure_line_profile(accessToken, json.dumps(lineBody))
 
 if __name__ == "__main__":
-    main()
+    for olt in dpmsData['OLTs']:
+       deviceKey =  olt   
+       main()
