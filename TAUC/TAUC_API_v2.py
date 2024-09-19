@@ -7,6 +7,9 @@ import re
 import get_bearer_tokens
 import generate_signature
 
+def make_pretty_json(json_data):
+    return json.dumps(json_data, indent=1)
+
 def normalize_mac(mac):
     # Check if the MAC address is already in the correct format
     if re.match(r'^[0-9a-fA-F]{12}$', mac):
@@ -37,12 +40,13 @@ def push_api(method, conn,request_url,payload, token):
     conn.request(method, request_url, payload, generate_headers(token, request_url, payload))
     res = conn.getresponse()
     data = json.loads(res.read())
-    print(data)
-    if data['errorCode'] != 0:
-        print('Message:',data['msg'],'\n', data['result'])
-        exit()
-    else:
+    print(make_pretty_json(data))
+    print(int(data['errorCode']) == 0)
+    if int(data['errorCode']) == 0:
         return data
+    else:
+        print('Message:',data['msg'],'\n', make_pretty_json(data['result']))
+        breakpoint
 
 def main():
     cert_file_path = 'certs/client.crt'
@@ -50,8 +54,9 @@ def main():
     token_file_path = 'bearer_token'
     token = get_token(token_file_path)
     context = create_ssl_context(cert_file_path, key_file_path)
-    sn = input ('Insert Serial Number["Y234081000803"]:')
-    mac = input ('Insert Mac Address["5C628BA23548"]:')
+    sn = input ('Insert Serial Number["223CACS000010"]:')
+    mac = input ('Insert Mac Address["20362690B8E3"]:')
+    networkName = input('Insert Network Name [EX920_TJ]:')
     client_secret = "6b42162e88a24e2bb0496ba7ccac72e3"
     generate_signature.timestamp = str(int(time.time()))
     generate_signature.nonce = str(uuid.uuid4())
@@ -65,7 +70,7 @@ def main():
     if operation.lower() == 'add':
         #Create Network
         request_url = "/v1/openapi/service-activation-services/network"
-        payload = f'{{"networkName":"EX920","username":".","meshUnitList":[{{"sn":"{sn}","mac":"{mac}"}}]}}'
+        payload = f'{{"networkName":"{networkName}","username":"python","meshUnitList":[{{"sn":"{sn}","mac":"{mac}"}}]}}'
         #print(payload)
         method = "POST"
         response = push_api(method, conn, request_url, payload, token )

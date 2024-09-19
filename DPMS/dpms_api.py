@@ -16,6 +16,8 @@ def yaml2json(yamlFileName):
     jsonData = json.loads(json.dumps(data))
     return jsonData
 
+def make_pretty_json(json_data):
+    return json.dumps(json_data, indent=1)
 
 # Log into DPMS Server
 def login_to_api(dpms_server, dpms_port, dpms_id, client_id, username, password):

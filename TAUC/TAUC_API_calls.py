@@ -34,12 +34,13 @@ def get_token(token_file_path):
         return file.read().strip()
     
 def push_api(method, conn,request_url,payload, token):
+    print('API Call:', request_url)
     conn.request(method, request_url, payload, generate_headers(token, request_url, payload))
     res = conn.getresponse()
     data = json.loads(res.read())
     #print(data)
     if data['errorCode'] != 0:
-        print('Message:',data['msg'],'\n', data['result'])
+        print('Message:',data['msg'],'\n', data)
         exit()
     else:
         return data

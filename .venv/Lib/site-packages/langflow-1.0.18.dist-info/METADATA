@@ -1,0 +1,182 @@
+Metadata-Version: 2.1
+Name: langflow
+Version: 1.0.18
+Summary: A Python package with a built-in web application
+Home-page: https://github.com/langflow-ai/langflow
+License: MIT
+Keywords: nlp,langchain,openai,gpt,gui
+Author: Langflow
+Author-email: contact@langflow.org
+Maintainer: Carlos Coelho
+Maintainer-email: carlos@langflow.org
+Requires-Python: >=3.10,<3.13
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Provides-Extra: cassio
+Provides-Extra: couchbase
+Provides-Extra: deploy
+Provides-Extra: local
+Requires-Dist: assemblyai (>=0.26.0,<0.27.0)
+Requires-Dist: astra-assistants (>=2.1.0.10,<3.0.0.0)
+Requires-Dist: beautifulsoup4 (>=4.12.2,<5.0.0)
+Requires-Dist: boto3 (>=1.34.162,<1.35.0)
+Requires-Dist: bson (>=0.5.10,<0.6.0)
+Requires-Dist: cassio[cassio] (>=0.1.7,<0.2.0) ; extra == "cassio"
+Requires-Dist: celery[redis] (>=5.3.6,<6.0.0) ; extra == "deploy"
+Requires-Dist: certifi (>=2023.11.17,<2025.0.0)
+Requires-Dist: chromadb (>=0.4,<0.5)
+Requires-Dist: clickhouse-connect[clickhouse-connect] (==0.7.19)
+Requires-Dist: cohere (>=5.5.3,<6.0.0)
+Requires-Dist: composio-langchain (==0.5.9)
+Requires-Dist: couchbase[couchbase] (>=4.2.1,<5.0.0) ; extra == "couchbase"
+Requires-Dist: crewai[tools] (>=0.36.0,<0.37.0)
+Requires-Dist: ctransformers (>=0.2.10,<0.3.0) ; extra == "local"
+Requires-Dist: dspy-ai (>=2.4.0,<3.0.0)
+Requires-Dist: elasticsearch (>=8.12.0,<9.0.0)
+Requires-Dist: faiss-cpu (>=1.8.0,<2.0.0)
+Requires-Dist: fake-useragent (>=1.5.0,<2.0.0)
+Requires-Dist: fastavro (>=1.8.0,<2.0.0)
+Requires-Dist: firecrawl-py (>=0.0.16,<0.0.17)
+Requires-Dist: flower (>=2.0.0,<3.0.0) ; extra == "deploy"
+Requires-Dist: gitpython (>=3.1.43,<4.0.0)
+Requires-Dist: google-api-python-client (>=2.130.0,<3.0.0)
+Requires-Dist: google-search-results (>=2.4.1,<3.0.0)
+Requires-Dist: huggingface-hub[inference] (>=0.23.2,<0.24.0)
+Requires-Dist: jq (>=1.8.0,<2.0.0)
+Requires-Dist: json-repair (>=0.25.2,<0.26.0)
+Requires-Dist: kubernetes (>=30.1.0,<31.0.0)
+Requires-Dist: langchain-anthropic (>=0.1.23,<0.2.0)
+Requires-Dist: langchain-astradb (>=0.3.5,<0.4.0)
+Requires-Dist: langchain-aws (>=0.1.16,<0.2.0)
+Requires-Dist: langchain-chroma (>=0.1.1,<0.2.0)
+Requires-Dist: langchain-cohere (>=0.1.5,<0.2.0)
+Requires-Dist: langchain-google-calendar-tools (>=0.0.1,<0.0.2)
+Requires-Dist: langchain-google-community (==1.0.7)
+Requires-Dist: langchain-google-genai (==1.0.8)
+Requires-Dist: langchain-google-vertexai (==1.0.10)
+Requires-Dist: langchain-groq (==0.1.9)
+Requires-Dist: langchain-milvus (>=0.1.1,<0.2.0)
+Requires-Dist: langchain-mistralai (==0.1.12)
+Requires-Dist: langchain-mongodb (>=0.1.6,<0.2.0)
+Requires-Dist: langchain-nvidia-ai-endpoints (==0.1.6)
+Requires-Dist: langchain-openai (==0.1.22)
+Requires-Dist: langchain-pinecone (>=0.1.3,<0.2.0)
+Requires-Dist: langchain-unstructured (>=0.1.2,<0.2.0)
+Requires-Dist: langflow-base (>=0.0.96,<0.0.97)
+Requires-Dist: langfuse (>=2.33.0,<3.0.0)
+Requires-Dist: langsmith (>=0.1.86,<0.2.0)
+Requires-Dist: langwatch (>=0.1.16,<0.2.0)
+Requires-Dist: lark (>=1.2.2,<2.0.0)
+Requires-Dist: litellm (>=1.44.0,<2.0.0)
+Requires-Dist: llama-cpp-python (>=0.2.0,<0.3.0) ; extra == "local"
+Requires-Dist: markdown (>=3.7,<4.0)
+Requires-Dist: markupsafe (>=2.1.3,<3.0.0)
+Requires-Dist: metal-sdk (>=2.5.0,<3.0.0)
+Requires-Dist: metaphor-python (>=0.1.11,<0.2.0)
+Requires-Dist: networkx (>=3.1,<4.0)
+Requires-Dist: nltk (>=3.9.1,<4.0.0)
+Requires-Dist: numexpr (>=2.8.6,<3.0.0)
+Requires-Dist: pgvector (>=0.2.3,<0.3.0)
+Requires-Dist: psycopg (==3.1.9)
+Requires-Dist: psycopg2-binary (>=2.9.6,<3.0.0)
+Requires-Dist: pyarrow (>=14.0.0,<15.0.0)
+Requires-Dist: pyautogen (>=0.2.0,<0.3.0)
+Requires-Dist: pydantic-settings (==2.4.0)
+Requires-Dist: pymongo (>=4.6.0,<5.0.0)
+Requires-Dist: pytube (>=15.0.0,<16.0.0)
+Requires-Dist: pywin32 (>=306,<307) ; sys_platform == "win32"
+Requires-Dist: qdrant-client (>=1.9.0,<2.0.0)
+Requires-Dist: qianfan (==0.3.5)
+Requires-Dist: ragstack-ai-knowledge-store (>=0.2.1,<0.3.0)
+Requires-Dist: redis (>=5.0.1,<6.0.0) ; extra == "deploy"
+Requires-Dist: sentence-transformers (>=2.3.1,<3.0.0) ; extra == "local"
+Requires-Dist: spider-client (>=0.0.27,<0.0.28)
+Requires-Dist: supabase (>=2.3.0,<3.0.0)
+Requires-Dist: types-cachetools (>=5.3.0.5,<6.0.0.0)
+Requires-Dist: unstructured[docx,md,pptx] (>=0.14.4,<0.15.0)
+Requires-Dist: upstash-vector (>=0.5.0,<0.6.0)
+Requires-Dist: weaviate-client
+Requires-Dist: wikipedia (>=1.4.0,<2.0.0)
+Requires-Dist: wolframalpha (>=5.1.3,<6.0.0)
+Requires-Dist: yfinance (>=0.2.40,<0.3.0)
+Requires-Dist: youtube-transcript-api (>=0.6.2,<0.7.0)
+Requires-Dist: zep-python (>=2.0.0rc5,<3.0.0)
+Project-URL: Documentation, https://docs.langflow.org
+Project-URL: Repository, https://github.com/langflow-ai/langflow
+Description-Content-Type: text/markdown
+
+<!-- markdownlint-disable MD030 -->
+
+# [![Langflow](./docs/static/img/hero.png)](https://www.langflow.org)
+
+<p align="center" style="font-size: 12px;">
+    Langflow is a low-code app builder for RAG and multi-agent AI applications. It’s Python-based and agnostic to any model, API, or database.
+</p>
+
+<p align="center" style="font-size: 12px;">
+    <a href="https://docs.langflow.org" style="text-decoration: underline;">Docs</a> -
+    <a href="https://astra.datastax.com/signup?type=langflow" style="text-decoration: underline;">Free Cloud Service</a> -
+    <a href="https://docs.langflow.org/getting-started-installation" style="text-decoration: underline;">Self Managed</a>
+    
+</p>
+
+<div align="center">
+  <a href="./README.md"><img alt="README in English" src="https://img.shields.io/badge/English-d9d9d9"></a>
+  <a href="./README.PT.md"><img alt="README in Portuguese" src="https://img.shields.io/badge/Portuguese-d9d9d9"></a>
+  <a href="./README.ES.md"><img alt="README in Spanish" src="https://img.shields.io/badge/Spanish-d9d9d9"></a>  
+  <a href="./README.zh_CN.md"><img alt="README in Simplified Chinese" src="https://img.shields.io/badge/简体中文-d9d9d9"></a>
+  <a href="./README.ja.md"><img alt="README in Japanese" src="https://img.shields.io/badge/日本語-d9d9d9"></a>
+  <a href="./README.KR.md"><img alt="README in KOREAN" src="https://img.shields.io/badge/한국어-d9d9d9"></a>
+</div>
+
+## ✨ Core features
+
+1. **Python-based** and agnostic to models, APIs, data sources, or databases.
+2. **Visual IDE** for drag-and-drop building and testing of workflows.
+3. **Playground** to immediately test and iterate workflows with step-by-step control.
+4. **Multi-agent** orchestration and conversation management and retrieval.
+5. **Free cloud service** to get started in minutes with no setup.
+6. **Publish as an API** or export as a Python application.
+7. **Observability** with LangSmith, LangFuse, or LangWatch integration.
+8. **Enterprise-grade** security and scalability with free DataStax Langflow cloud service.
+9. **Customize workflows** or create flows entirely just using Python.
+10. **Ecosystem integrations** as reusable components for any model, API or database.
+
+![Integrations](https://github.com/user-attachments/assets/e9c96dc4-47bf-48ab-ad58-e01e038f25e8)
+
+
+## 📦 Quickstart
+
+- **Install with pip** (Python 3.10 or greater):
+
+```shell
+pip install langflow
+```
+
+- **Cloud:** DataStax Langflow is a hosted environment with zero setup. [Sign up for a free account.](https://astra.datastax.com/signup?type=langflow)
+- **Self-managed:** Run Langflow in your environment. [Install Langflow](https://docs.langflow.org/getting-started-installation) to run a local Langflow server, and then use the [Quickstart](https://docs.langflow.org/getting-started-quickstart) guide to create and execute a flow.
+- **Hugging Face:** [Clone the space using this link](https://huggingface.co/spaces/Langflow/Langflow?duplicate=true) to create a Langflow workspace.
+
+[![Getting Started](https://github.com/user-attachments/assets/f1adfbe7-3c35-43a4-b265-661f3d4f875f)](https://www.youtube.com/watch?v=kinngWhaUKM)
+
+## ⭐ Stay up-to-date
+
+Star Langflow on GitHub to be instantly notified of new releases.
+
+![Star Langflow](https://github.com/user-attachments/assets/03168b17-a11d-4b2a-b0f7-c1cce69e5a2c)
+
+## 👋 Contribute
+
+We welcome contributions from developers of all levels. If you'd like to contribute, please check our [contributing guidelines](./CONTRIBUTING.md) and help make Langflow more accessible.
+
+---
+
+[![Star History Chart](https://api.star-history.com/svg?repos=langflow-ai/langflow&type=Timeline)](https://star-history.com/#langflow-ai/langflow&Date)
+
+## ❤️ Contributors
+
+[![langflow contributors](https://contrib.rocks/image?repo=langflow-ai/langflow)](https://github.com/langflow-ai/langflow/graphs/contributors)
+
