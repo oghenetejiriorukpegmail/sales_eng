@@ -55,14 +55,24 @@ def get_network_data(networkId):
     data = push_api(method, conn, request_url, payload, token)
     return data
 
-def get_device_info(deviceID):
+def get_device_firmware(deviceID):
     method = 'GET'
     request_url = f'/v1/openapi/device-information/device-info/{deviceID}'
-    payload = ''
     print(request_url)
     data = push_api(method, conn, request_url, payload, token)
-    print(data)
+    #print(data)
+    firmware = data['result']['fwVersion']
+    model = data['result']['deviceModel']
+    type = data['result']['deviceCategory']
+    return {'firmware':firmware, 'deviceModel': model, 'deviceType': type}
 
+def get_device_id(sn, mac):
+    method = 'GET'
+    request_url = f'/v1/openapi/device-information/device-id?sn={sn}&mac={mac}'
+    print(request_url)
+    data = push_api(method, conn, request_url, payload, token)
+    deviceID = data['result']['deviceId']
+    return deviceID
 
 
 # Define the paths to your certificate and key files
@@ -79,18 +89,44 @@ context.load_cert_chain(cert_file_path, key_file_path)  # Using positional argum
 conn = http.client.HTTPSConnection("use1-tauc-openapi.tplinkcloud.com", context=context)
 token =token_file_path.read()
 
-network_status = ['ONLINE', 'OFFLINE', 'ABNORMAL', 'INVENTORY', 'NAT-LOCKED', 'SUSPEND']
+network_status = ['ONLINE', 'OFFLINE', 'ABNORMAL', 'INVENTORY', 'NAT-LOCKED']
+networkDataList = []
+payload = ''
 client_secret = "6b42162e88a24e2bb0496ba7ccac72e3"
+request_body = json.dumps(payload)
 generate_signature.timestamp = str(int(time.time()))
 generate_signature.nonce = str(uuid.uuid4())
 generate_signature.key = client_secret
+deviceTable = pd.DataFrame(columns=['DeviceID', 'SN', 'MAC', 'Firmware', 'Model', 'Device-Type'])
 
 for status in network_status:
-    request_url = f"/v1/openapi/network-system-management/network-name-list?page=0&pageSize=100&networkStatus={status}"
-    print('API URL: ', request_url)
-    method = 'GET'
-    payload = ''
-    data = push_api(method, conn,request_url,payload, token)
-    #print(data)
-    dataList = data['result']['data']
-    print(dataList)
+  dataList = []
+  request_url = f"/v1/openapi/network-system-management/network-name-list/{status}?page=0&pageSize=10"
+  print('API URL: ', request_url)
+  method = 'GET'
+  data = push_api(method, conn,request_url,payload, token)
+  #print(data)
+  dataList = data['result']['data']
+networkDataList.extend(dataList)
+#print('Network List:', networkDataList)
+networkDataTable = list_to_table(networkDataList)
+#print(networkDataTable)
+#print(networkDataTable['id'])
+for id in networkDataTable['id']:
+   #print (id)
+   networkInformation = get_network_data(id)
+   #print(networkInformation, type(networkInformation))
+   networkName = networkInformation['result']['network']['networkName']
+   for device in networkInformation['result']['network']['meshUnitList']:
+       deviceSN = device['sn']
+       deviceMAC = device['mac']
+       deviceID = device['deviceId']
+       deviceInfo= get_device_firmware(deviceID)
+       newTableDict = {'DeviceID': deviceID, 'SN': deviceSN, 'MAC': deviceMAC, 'Firmware': deviceInfo['firmware'], 'Model': deviceInfo['deviceModel'], 'Device-Type': deviceInfo['deviceType']}
+       newTable = pd.DataFrame([newTableDict])
+       deviceTable = pd.concat([deviceTable, newTable])
+
+print(deviceTable)
+deviceTable.to_excel('devfile.xlsx')
+deco = deviceTable[deviceTable['Device-Type'] == 'DECO']
+print(deco)

@@ -1,0 +1,61 @@
+omada:
+  server: 127.0.0.1
+  port: 8043
+  clientID: e741e637d8144a628a9241bc35dbad3c
+  clientSecret: f8d1b497bc0d47e2bf0c0b78dfef6845
+  omadaID: 679fa9dd47f2cd89a3182563d30fd4e7
+  userName: python
+  userPassword: Archer2023!
+
+users:
+  - username: pythonuser
+    password: Archer2023!
+    administrator_type: 0
+    role: admin_id
+    allSitePrevileges: "True"
+    email: me@you.com
+    alert_emails: "True"
+
+sites:
+  newSites:
+    - new_site
+    - new_site1
+  deleteSites:
+    - new_site1
+
+
+Wired_Networks:
+  internet:
+    gatewayModel: ER7206v1
+    onlineDetectionInterval: 2
+    ports:
+      - portName: SFP_WAN
+        description: "Python configured interface"
+        connectionType: Static IP
+        ipAddress: 192.168.0.254
+        subnetMask: 255.255.255.0
+        defaultGateway: 192.168.0.1
+
+  LAN:
+    - name: pythonVLAN
+      purpose: Interface
+      LANInterfaces: WAN/LAN1, WLAN/LAN2, LAN1, LAN2
+      type: single
+      id: 100
+      gateway: 10.100.0.1
+      subnet: 24
+      DHCPServer: True
+      DHCPStart: 10.100.100   
+      DHCPEnd: 10.100.200    
+      DNSServer: Auto
+      leaseTime: 120
+
+Wireless_Networks:
+  WLAN:
+    - networkName: pythonSSID
+      deviceType: EAP, Gateway
+      band: 2.4GHz, 5GHz, 6GHz
+      guestNetwork: False
+      security: WPA-Personal
+      securityKey: 00000000
+      VLAN: 100

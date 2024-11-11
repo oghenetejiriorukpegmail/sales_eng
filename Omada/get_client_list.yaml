@@ -1,0 +1,12 @@
+omada:
+  server: 192.168.0.252
+  port: 443
+  clientID: eeb6dede5f1f476198ae0a0d8f9a3bc9
+  clientSecret: c66bfac87a0e469590fbdd71d99422da
+  omadaID: bbffebf28320509756c1b2e05d602b0a
+  userName: admin
+  userPassword: password
+
+sites:
+  - Home_Lab
+

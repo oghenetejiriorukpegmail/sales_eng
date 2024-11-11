@@ -1,0 +1,137 @@
+omada:
+  #login_server: use1-omada-controller.tplinkcloud.com
+  login_server: use1-omada-cloud.tplinkcloud.com
+  api_server: use1-northbound-omada-controller.tplinkcloud.com
+  port: 443
+  clientID: 31300163a48b4dde883c39a0adb12c37
+  clientSecret: 1fb7791fef61411e9f39c4513daa0a2c
+  omadaID: 7569e38c22bfbb249ec1814c0e6cd586
+  userName: eustace.orukpe@tp-link.com
+  userPassword: P@ssword1
+
+users:
+  - username: pythonUser
+    password: Archer2016
+    administrator_type: 0
+    role: admin_id
+    allSitePrevileges: "True"
+    email: me@you.com
+    alert_emails: "True"
+
+sites:
+  newSites:
+    - new_site
+    - new_site1
+  deleteSites:
+    - new_site1
+
+OLTs:
+  -  34-60-F9-3E-5A-CC
+
+PON:
+  PON_port:
+    port_no: 1/0/1
+    port_status: ENABLE
+  Profile:
+    DBA:
+      Profile_ID: 
+      Profile_Name: pythonDBA
+      Type: FIX
+      Fix_Bandwidth: 100000
+      Assured_Bandwidth: 0
+      Max_Bandwidth: 0
+    Line:
+      Profile_ID:
+      Profile_Name: pythonLine
+      Upstream_FEC: ENABLE
+      Mapping_Mode: VLAN
+      Encrypt: ENABLE
+      TCONT:
+        TCONT_ID: 1
+        DBA_Profile_ID: 0
+      GEM_Ports:
+        -  GEM_Port_ID: 1
+           TCONT_ID: 1
+           Encryption: ENABLE
+      GEM_Mapping_Rules:
+        -  GEM_Mapping_ID: 1
+           GEM_Port_ID: 1
+           Mapping_Mode: VLAN
+           VLAN: 
+             Type: Tagged
+             ID: 100
+    Services:
+      - Profile_ID:
+        Profile_Name: PythonServiceProfile
+        ETH_Number: -1
+        ETH_Max_Adaptive_Number: 4
+        POTS_Number: -1
+        POTS_Max_Adaptive_Number: 2
+        MAC_Learning: enable
+        Native_VLAN: unconcern
+        Multicast_Mode: unconcern
+        Multicast_Forward: unconcern
+    Traffic:
+      - Profile_ID:
+        Profile_Name: pythonTrafficProfile_100MB
+        Rate_Limit: ENABLE
+        CIR: 102400
+        CBS:
+        PIR:
+        PBS:
+        Priority:
+          Type: user_cos
+          Value: 0
+        Inner_Priority:
+          Type: none
+          Value: 0  
+        Priority-Policy: Tag_In_Package
+  Service_Ports:
+    - index: 2
+      Description: pythonServicePort
+      SVLAN: 100
+      PON_Port: 1
+      ONU_ID: 2
+      GEM_ID: 2
+      UserVLAN:
+        Enabled: yes
+        Value: 100
+        User_VLAN_Priority: -1
+        TAG_Action: Transparent
+      Ethertype: None
+      Inbound_Traffic_Profile: pythonTrafficProfile_100MB
+      Outbound_Traffic_Profile: pythonTrafficProfile_100MB
+      AdminStatus: disable
+      Performance_Statistics: enable
+
+L2_Features:
+  Port_Config:
+    Jumbo: 1518
+    Port_Config:
+      - name: G1/0/2
+        Description:
+        Status: Enable
+        Speed: 1000
+        Duplex: Full
+  VLAN:
+    802_1Q_VLAN:
+      - VLAN_ID: 100
+        VLAN_Name: pythonVLAN
+        Untagged_Ports: ""
+        Tagged_Ports: xge 1/0/1,ge 1/0/2
+
+L3_Features:
+  Interface:
+    IPv4_Routing: True
+    IPv6_Routing: False
+    DNS_Server:
+      Primary: 8.8.8.8
+      Apply: True
+    Interface_Config:
+      - Type: VLAN
+        Value: 100
+        Mode: Static
+        Static_IP: 10.0.100.254
+        Static_Subnet_Mask: 255.255.255.0
+        Admin_Status: True
+        Interface_Name: pythonVLAN
